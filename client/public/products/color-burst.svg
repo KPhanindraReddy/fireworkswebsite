@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#111827" />
+      <stop offset="1" stop-color="#7f1d1d" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" rx="48" fill="url(#bg)" />
+  <circle cx="300" cy="220" r="22" fill="#fff7ed" />
+  <g stroke-linecap="round" stroke-width="10">
+    <path d="M300 90v82M300 268v82" stroke="#fde68a" />
+    <path d="M170 220h82M348 220h82" stroke="#fb7185" />
+    <path d="M208 128l58 58M334 254l58 58" stroke="#f97316" />
+    <path d="M392 128l-58 58M266 254l-58 58" stroke="#38bdf8" />
+  </g>
+  <path d="M238 430h124l-28-82h-68z" fill="#f59e0b" />
+  <text x="48" y="502" fill="#fecaca" font-family="Segoe UI, sans-serif" font-size="26" letter-spacing="3">BOMBS</text>
+  <text x="48" y="548" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="46" font-weight="700">Color Burst Pack</text>
+</svg>

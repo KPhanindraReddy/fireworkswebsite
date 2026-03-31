@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#111827" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" rx="48" fill="url(#bg)" />
+  <circle cx="470" cy="150" r="80" fill="#22c55e" opacity=".18" />
+  <path d="M230 460h140l-24-140h-92z" fill="#f97316" />
+  <path d="M300 210 247 325h106z" fill="#fff7ed" opacity=".85" />
+  <g stroke-linecap="round">
+    <path d="M300 210v-76M300 210l-70-102M300 210l70-102M300 210l-100-30M300 210l100-30M300 210l-46-116M300 210l46-116" stroke="#fde68a" stroke-width="8" />
+    <circle cx="300" cy="210" r="16" fill="#fff7ed" />
+  </g>
+  <text x="48" y="502" fill="#ccfbf1" font-family="Segoe UI, sans-serif" font-size="26" letter-spacing="3">FOUNTAINS</text>
+  <text x="48" y="548" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="46" font-weight="700">Galaxy Fountain</text>
+</svg>

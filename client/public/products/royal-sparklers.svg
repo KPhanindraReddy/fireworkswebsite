@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0f172a" />
+      <stop offset="1" stop-color="#a16207" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" rx="48" fill="url(#bg)" />
+  <path d="M225 450 340 180" stroke="#f8fafc" stroke-width="10" stroke-linecap="round" />
+  <path d="M310 470 390 274" stroke="#f8fafc" stroke-width="10" stroke-linecap="round" />
+  <g stroke="#fde68a" stroke-linecap="round" stroke-width="8">
+    <path d="M340 180v-58M340 180l-52-18M340 180l52-18M340 180l-42-44M340 180l42-44M340 180l-20-56M340 180l20-56" />
+    <path d="M390 274v-48M390 274l-44-14M390 274l44-14M390 274l-34-36M390 274l34-36M390 274l-18-48M390 274l18-48" />
+  </g>
+  <circle cx="340" cy="180" r="14" fill="#fff7ed" />
+  <circle cx="390" cy="274" r="12" fill="#fff7ed" />
+  <text x="48" y="502" fill="#fde68a" font-family="Segoe UI, sans-serif" font-size="26" letter-spacing="3">SPARKLERS</text>
+  <text x="48" y="548" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="46" font-weight="700">Royal Bundle</text>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1f2937" />
+      <stop offset="1" stop-color="#7c2d12" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" rx="48" fill="url(#bg)" />
+  <circle cx="160" cy="145" r="86" fill="#f59e0b" opacity=".16" />
+  <path d="M245 445h110l-18-118h-74z" fill="#f97316" />
+  <g stroke="#fde68a" stroke-linecap="round" stroke-width="8">
+    <path d="M300 235v88M300 235l-52-76M300 235l52-76M300 235l-84-26M300 235l84-26M300 235l-34-98M300 235l34-98M300 235l-112 8M300 235l112 8" />
+  </g>
+  <circle cx="300" cy="235" r="18" fill="#fff7ed" />
+  <text x="48" y="502" fill="#fdba74" font-family="Segoe UI, sans-serif" font-size="26" letter-spacing="3">FLOWER POTS</text>
+  <text x="48" y="548" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="46" font-weight="700">Festival Pots</text>
+</svg>

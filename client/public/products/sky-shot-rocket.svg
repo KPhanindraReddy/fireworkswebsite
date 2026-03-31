@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#0f172a" />
+      <stop offset="1" stop-color="#1d4ed8" />
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" rx="48" fill="url(#bg)" />
+  <circle cx="460" cy="130" r="78" fill="#f59e0b" opacity=".18" />
+  <circle cx="150" cy="460" r="94" fill="#fb7185" opacity=".16" />
+  <g stroke="#fff7ed" stroke-linecap="round">
+    <path d="M300 150v70M300 70v34M226 122l49 29M374 122l-49 29M226 278l49-29M374 278l-49-29M236 190h58M306 190h58" stroke-width="10" />
+    <circle cx="300" cy="190" r="16" fill="#fff7ed" stroke="none" />
+    <path d="M240 498l58-148 24 10-50 152z" fill="#f97316" stroke="none" />
+    <path d="M324 336l26 9-11 34-27-8z" fill="#fcd34d" stroke="none" />
+    <path d="M265 460c31-22 70-49 102-86" stroke="#fcd34d" stroke-width="8" />
+  </g>
+  <text x="48" y="502" fill="#fff7ed" font-family="Segoe UI, sans-serif" font-size="26" letter-spacing="3">ROCKETS</text>
+  <text x="48" y="548" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="46" font-weight="700">Sky Shot Pack</text>
+</svg>
