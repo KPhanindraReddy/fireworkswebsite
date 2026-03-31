@@ -3,7 +3,12 @@ import { Link } from "react-router-dom";
 import ProductGrid from "../components/ProductGrid.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 import { ProductGridSkeleton } from "../components/LoadingState.jsx";
-import { fetchProducts } from "../lib/api.js";
+import { fetchProducts, readCachedProducts, warmProductsCache } from "../lib/api.js";
+
+const homeCatalogParams = {
+  featured: "true",
+  limit: "8",
+};
 
 function HomePage() {
   const [catalog, setCatalog] = useState({ products: [], categories: [] });
@@ -12,11 +17,24 @@ function HomePage() {
 
   useEffect(() => {
     let isMounted = true;
+    const cachedCatalog = readCachedProducts(homeCatalogParams, { allowStale: true });
+
+    if (cachedCatalog.data) {
+      setCatalog(cachedCatalog.data);
+      setLoading(false);
+    }
 
     const loadCatalog = async () => {
       try {
-        setLoading(true);
-        const data = await fetchProducts();
+        setError("");
+
+        if (!cachedCatalog.data) {
+          setLoading(true);
+        }
+
+        const data = await fetchProducts(homeCatalogParams, {
+          bypassCache: !cachedCatalog.isFresh,
+        });
 
         if (isMounted) {
           setCatalog(data);
@@ -33,8 +51,30 @@ function HomePage() {
     };
 
     loadCatalog();
+
+    let idleHandle;
+    let usesIdleCallback = false;
+
+    if (typeof window !== "undefined" && typeof window.requestIdleCallback === "function") {
+      usesIdleCallback = true;
+      idleHandle = window.requestIdleCallback(() => {
+        warmProductsCache();
+      });
+    } else {
+      idleHandle = window.setTimeout(() => {
+        warmProductsCache();
+      }, 1200);
+    }
+
     return () => {
       isMounted = false;
+
+      if (usesIdleCallback) {
+        window.cancelIdleCallback(idleHandle);
+        return;
+      }
+
+      window.clearTimeout(idleHandle);
     };
   }, []);
 
@@ -85,9 +125,9 @@ function HomePage() {
           actionTo="/products"
         />
 
-        {error ? (
+        {error && !catalog.products.length ? (
           <div className="rounded-[28px] border border-rose-300 bg-rose-50 p-5 text-sm text-rose-700">{error}</div>
-        ) : loading ? (
+        ) : loading && !catalog.products.length ? (
           <ProductGridSkeleton />
         ) : (
           <ProductGrid

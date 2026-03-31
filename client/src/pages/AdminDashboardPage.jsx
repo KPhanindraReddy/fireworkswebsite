@@ -5,6 +5,7 @@ import ProductForm from "../components/admin/ProductForm.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 import { PageSpinner } from "../components/LoadingState.jsx";
 import {
+  clearProductCache,
   createProduct,
   deleteProduct,
   fetchOrders,
@@ -41,7 +42,10 @@ function AdminDashboardPage() {
   const loadDashboard = async () => {
     try {
       setLoading(true);
-      const [productsResponse, ordersResponse] = await Promise.all([fetchProducts(), fetchOrders()]);
+      const [productsResponse, ordersResponse] = await Promise.all([
+        fetchProducts({ includeFacets: "false" }, { bypassCache: true, cache: "no-store" }),
+        fetchOrders(),
+      ]);
       setProducts(productsResponse.products);
       setOrders(ordersResponse);
     } catch (requestError) {
@@ -100,6 +104,7 @@ function AdminDashboardPage() {
         toast.success("Product created");
       }
 
+      clearProductCache();
       resetForm();
       await loadDashboard();
     } catch (requestError) {
@@ -135,6 +140,7 @@ function AdminDashboardPage() {
 
     try {
       await deleteProduct(productId);
+      clearProductCache();
       toast.success("Product deleted");
       await loadDashboard();
     } catch (requestError) {

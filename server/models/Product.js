@@ -66,6 +66,10 @@ const productSchema = new mongoose.Schema(
   },
 );
 
+productSchema.index({ category: 1 });
+productSchema.index({ audience: 1 });
+productSchema.index({ featured: -1, createdAt: -1 });
+
 productSchema.pre("validate", function assignSlug(next) {
   if ((this.isModified("name") || !this.slug) && this.name) {
     this.slug = createSlug(this.name);

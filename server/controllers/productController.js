@@ -1,4 +1,9 @@
 import Product from "../models/Product.js";
+import {
+  invalidateProductQueryCache,
+  readProductQueryCache,
+  writeProductQueryCache,
+} from "../utils/productQueryCache.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { createHttpError } from "../utils/createHttpError.js";
 
@@ -60,12 +65,25 @@ const validateProductPayload = (product) => {
   }
 };
 
+const PRODUCT_CACHE_HEADER = "public, max-age=60, stale-while-revalidate=300";
+
+const parsePositiveInteger = (value) => {
+  if (value === undefined || value === null || value === "") {
+    return null;
+  }
+
+  const parsedValue = Number.parseInt(value, 10);
+  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
+};
+
 export const getProducts = asyncHandler(async (req, res) => {
   const search = req.query.search?.trim();
   const category = req.query.category?.trim();
   const audience = req.query.audience?.trim();
   const featured = req.query.featured;
   const inStock = req.query.inStock;
+  const includeFacets = req.query.includeFacets !== "false";
+  const limit = parsePositiveInteger(req.query.limit);
 
   const filters = {};
 
@@ -93,26 +111,54 @@ export const getProducts = asyncHandler(async (req, res) => {
     filters.stock = { $gt: 0 };
   }
 
-  const [products, categories, audiences] = await Promise.all([
-    Product.find(filters).sort({ featured: -1, createdAt: -1 }),
-    Product.distinct("category"),
-    Product.distinct("audience"),
-  ]);
+  const cacheKey = {
+    audience,
+    category,
+    featured: featured === "true" ? "true" : "",
+    inStock: inStock === "true" ? "true" : "",
+    includeFacets,
+    limit: limit ?? "",
+    search,
+  };
+  const cachedResponse = readProductQueryCache(cacheKey);
 
-  res.json({
-    products,
-    categories: ["All", ...categories.filter(Boolean).sort()],
-    audiences: ["All", ...audiences.filter(Boolean).sort()],
-  });
+  if (cachedResponse) {
+    res.set("Cache-Control", PRODUCT_CACHE_HEADER);
+    res.json(cachedResponse);
+    return;
+  }
+
+  const productsQuery = Product.find(filters).sort({ featured: -1, createdAt: -1 }).lean();
+
+  if (limit) {
+    productsQuery.limit(limit);
+  }
+
+  const response = includeFacets
+    ? await Promise.all([productsQuery, Product.distinct("category"), Product.distinct("audience")]).then(
+        ([products, categories, audiences]) => ({
+          products,
+          categories: ["All", ...categories.filter(Boolean).sort()],
+          audiences: ["All", ...audiences.filter(Boolean).sort()],
+        }),
+      )
+    : {
+        products: await productsQuery,
+      };
+
+  const payload = writeProductQueryCache(cacheKey, response);
+  res.set("Cache-Control", PRODUCT_CACHE_HEADER);
+  res.json(payload);
 });
 
 export const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).lean();
 
   if (!product) {
     throw createHttpError(404, "Product not found.");
   }
 
+  res.set("Cache-Control", PRODUCT_CACHE_HEADER);
   res.json(product);
 });
 
@@ -121,6 +167,7 @@ export const createProduct = asyncHandler(async (req, res) => {
   validateProductPayload(payload);
 
   const product = await Product.create(payload);
+  invalidateProductQueryCache();
   res.status(201).json(product);
 });
 
@@ -144,6 +191,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   Object.assign(existingProduct, payload);
   const updatedProduct = await existingProduct.save();
+  invalidateProductQueryCache();
 
   res.json(updatedProduct);
 });
@@ -156,5 +204,6 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   }
 
   await product.deleteOne();
+  invalidateProductQueryCache();
   res.json({ message: "Product deleted successfully." });
 });

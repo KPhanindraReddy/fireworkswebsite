@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import ProductGrid from "../components/ProductGrid.jsx";
 import SectionHeading from "../components/SectionHeading.jsx";
 import { ProductGridSkeleton } from "../components/LoadingState.jsx";
-import { fetchProducts } from "../lib/api.js";
+import { fetchProducts, readCachedProducts } from "../lib/api.js";
 
 function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,16 +19,29 @@ function ProductsPage() {
 
   useEffect(() => {
     let isMounted = true;
+    const requestParams = {
+      search: deferredSearch,
+      category: selectedCategory !== "All" ? selectedCategory : "",
+      audience: selectedAudience !== "All" ? selectedAudience : "",
+      inStock: inStockOnly ? "true" : "",
+    };
+    const cachedCatalog = readCachedProducts(requestParams, { allowStale: true });
+
+    if (cachedCatalog.data) {
+      setCatalog(cachedCatalog.data);
+      setLoading(false);
+    }
 
     const loadProducts = async () => {
       try {
-        setLoading(true);
         setError("");
-        const data = await fetchProducts({
-          search: deferredSearch,
-          category: selectedCategory !== "All" ? selectedCategory : "",
-          audience: selectedAudience !== "All" ? selectedAudience : "",
-          inStock: inStockOnly ? "true" : "",
+
+        if (!cachedCatalog.data) {
+          setLoading(true);
+        }
+
+        const data = await fetchProducts(requestParams, {
+          bypassCache: !cachedCatalog.isFresh,
         });
 
         if (isMounted) {
@@ -160,9 +173,9 @@ function ProductsPage() {
         </div>
       </section>
 
-      {error ? (
+      {error && !catalog.products.length ? (
         <div className="rounded-[28px] border border-rose-400/30 bg-rose-500/10 p-5 text-sm text-rose-100">{error}</div>
-      ) : loading ? (
+      ) : loading && !catalog.products.length ? (
         <ProductGridSkeleton />
       ) : (
         <ProductGrid
