@@ -71,6 +71,7 @@ Important server values:
 
 - `MONGODB_URI`
 - `CLIENT_URL`
+- `CLIENT_URLS` (optional, comma/space-separated list for multiple frontend URLs)
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
@@ -121,4 +122,8 @@ npm run seed
 - Build the frontend with `npm run build`
 - The Express server serves the built client in production
 - Configure MongoDB and Cloudinary through environment variables
+- Set `VITE_API_URL` on Vercel to your Render API URL, for example `https://your-service.onrender.com/api`
+- Set `CLIENT_URL` on Render to your main Vercel site, for example `https://your-site.vercel.app`
+- Use `CLIENT_URLS` on Render when you need to allow more than one frontend origin, such as a custom domain plus `vercel.app`
+- Vercel preview deployments are accepted automatically when `CLIENT_URL` or `CLIENT_URLS` contains the matching `*.vercel.app` project URL
 - Replace the starter SVG product art with real product photography in the admin panel for launch
